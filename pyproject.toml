@@ -1,0 +1,28 @@
+[tool.poetry]
+name = "summarizer-server"
+version = "0.1.0"
+description = ""
+authors = ["minsu <minsu2530@u.sogang.ac.kr>"]
+
+[tool.poetry.dependencies]
+python = "~3.8"
+fastapi = "^0.75.0"
+uvicorn = {extras = ["standard"], version = "^0.17.6"}
+
+
+[tool.poetry.dev-dependencies]
+poethepoet = "^0.13.1"
+pytest = "^7.1.0"
+pytest-cov = "^3.0.0"
+isort = "^5.10.1"
+coverage = "^6.3.2"
+pylint = "^2.1.6"
+ipykernel = "^6.9.2"
+black = "19.10b0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+redis = "^4.2.0"
+dependency-injector = "^4.39.1"
+boto3 = "^1.21.35"
