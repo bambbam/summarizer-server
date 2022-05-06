@@ -1,3 +1,21 @@
+[tool.poe.tasks]
+_black = "black ."
+_isort = "isort ."
+format = ["_black", "_isort"]
+
+_pylint = "pylint summarizer tests"
+lint = ["_pylint"]
+
+app = "uvicorn app.main:app --reload"
+
+coverage = "pytest --cov=summarizer --capture=sys"
+coverage-report = "pytest --cov=summarizer --cov-report=xml"
+
+unittest = "pytest -vv -x"
+
+test = ["coverage", "lint"]
+
+
 [tool.poetry]
 name = "summarizer-server"
 version = "0.1.0"
@@ -8,6 +26,7 @@ authors = ["minsu <minsu2530@u.sogang.ac.kr>"]
 python = "~3.8"
 fastapi = "^0.75.0"
 uvicorn = {extras = ["standard"], version = "^0.17.6"}
+boto3 = "^1.22.8"
 
 
 [tool.poetry.dev-dependencies]
