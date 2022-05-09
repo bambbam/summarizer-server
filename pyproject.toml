@@ -6,7 +6,9 @@ format = ["_black", "_isort"]
 _pylint = "pylint summarizer tests"
 lint = ["_pylint"]
 
-app = "uvicorn app.main:app --reload --port 3000"
+
+app = "uvicorn app.main:app --port 3000 --reload"
+
 
 coverage = "pytest --cov=summarizer --capture=sys"
 coverage-report = "pytest --cov=summarizer --cov-report=xml"
@@ -27,6 +29,9 @@ python = "~3.8"
 fastapi = "^0.75.0"
 uvicorn = {extras = ["standard"], version = "^0.17.6"}
 boto3 = "^1.22.8"
+bcrypt = "^3.2.2"
+PyJWT = "^2.3.0"
+python-multipart = "^0.0.5"
 
 
 [tool.poetry.dev-dependencies]
