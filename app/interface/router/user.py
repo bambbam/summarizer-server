@@ -10,7 +10,7 @@ router = APIRouter(prefix="/user", tags=["users"])
 
 
 @router.post("/signup")
-def create_user(request: User, dynamodb=Depends(get_db)):
+async def create_user(request: User, dynamodb=Depends(get_db)):
     repo = UserRepository(dynamodb=dynamodb)
     hashed_pass = bcrypt.hashpw(request.password.encode("utf-8"), bcrypt.gensalt())
     user_object = request.dict()
@@ -22,13 +22,19 @@ def create_user(request: User, dynamodb=Depends(get_db)):
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Already exist username with this {request.username} username",
         )
-
-    repo.create(user_object)
-    return {"res": "created"}
+    
+    ret = repo.put(user_object)
+    if ret:
+        return {"res": "created"}
+    
+    else:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=f"Wrong Username or password"
+        )
 
 
 @router.post("/login")
-def login(request: OAuth2PasswordRequestForm = Depends(), dynamodb=Depends(get_db)):
+async def login(request: OAuth2PasswordRequestForm = Depends(), dynamodb=Depends(get_db)):
     repo = UserRepository(dynamodb=dynamodb)
     user = repo.get(request.username)
 
@@ -47,5 +53,5 @@ def login(request: OAuth2PasswordRequestForm = Depends(), dynamodb=Depends(get_d
 
 
 @router.get("/")
-def read_root(current_user: str = Depends(get_current_user)):
+async def read_root(current_user: str = Depends(get_current_user)):
     return current_user
