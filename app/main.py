@@ -1,5 +1,7 @@
 from fastapi import Depends, FastAPI
+
 from app.interface.router import user, video
+
 app = FastAPI()
 
 app.include_router(user.router)

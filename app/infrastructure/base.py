@@ -1,5 +1,6 @@
-import boto3
 from abc import ABC, abstractmethod
+
+import boto3
 
 
 class Repository(ABC):
@@ -13,5 +14,5 @@ class Repository(ABC):
 
 
 async def get_db():
-    dynamodb = boto3.resource('dynamodb', endpoint_url="http://localhost:8000")
+    dynamodb = boto3.resource("dynamodb", endpoint_url="http://localhost:8000")
     return dynamodb
