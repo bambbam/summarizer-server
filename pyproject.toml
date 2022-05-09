@@ -6,7 +6,7 @@ format = ["_black", "_isort"]
 _pylint = "pylint summarizer tests"
 lint = ["_pylint"]
 
-app = "uvicorn app.main:app --reload"
+app = "uvicorn app.main:app --reload --port 3000"
 
 coverage = "pytest --cov=summarizer --capture=sys"
 coverage-report = "pytest --cov=summarizer --cov-report=xml"
