@@ -14,6 +14,7 @@ router = APIRouter(
     tags=["users"]
 )
 
+
 @router.post('/signup')
 def create_user(request:User, repo=Depends(get_user_repo)):
     hashed_pass = bcrypt.hashpw(request.password.encode('utf-8'), bcrypt.gensalt())
@@ -23,6 +24,7 @@ def create_user(request:User, repo=Depends(get_user_repo)):
     return {
         "res": "created"
     }
+
 
 
 @router.post("/login")
