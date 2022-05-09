@@ -3,7 +3,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 
 from app.infrastructure.base import get_db
-from app.infrastructure.user import User, UserRepository
+from app.infrastructure.user_repository import User, UserRepository
 from app.interface.router.auth import encode_token, get_current_user
 
 router = APIRouter(prefix="/user", tags=["users"])
@@ -22,11 +22,11 @@ async def create_user(request: User, dynamodb=Depends(get_db)):
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Already exist username with this {request.username} username",
         )
-    
-    ret = repo.put(user_object)
+
+    ret = repo.put(User(**user_object))
     if ret:
         return {"res": "created"}
-    
+
     else:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail=f"Wrong Username or password"
@@ -34,16 +34,18 @@ async def create_user(request: User, dynamodb=Depends(get_db)):
 
 
 @router.post("/login")
-async def login(request: OAuth2PasswordRequestForm = Depends(), dynamodb=Depends(get_db)):
+async def login(
+    request: OAuth2PasswordRequestForm = Depends(), dynamodb=Depends(get_db)
+):
     repo = UserRepository(dynamodb=dynamodb)
     user = repo.get(request.username)
-
+    print(user)
     if not user:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"No user found with this {request.username} username",
         )
-    if not bcrypt.checkpw(request.password.encode("utf-8"), user["password"].value):
+    if not bcrypt.checkpw(request.password.encode("utf-8"), user["password"].encode()):
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail=f"Wrong Username or password"
         )

@@ -25,9 +25,9 @@ class UserRepository(Repository):
     def __init__(self, dynamodb):
         self.table = dynamodb.Table("User")
 
-    def put(self, obj):
+    def put(self, obj: User):
         try:
-            self.table.put_item(Item=obj)
+            self.table.put_item(Item=obj.dict())
             return True
         except:
             return False

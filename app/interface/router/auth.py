@@ -29,7 +29,6 @@ oauth2_sheme = OAuth2PasswordBearer(tokenUrl="user/login")
 
 
 def get_current_user(token: str = Depends(oauth2_sheme)):
-    print(token)
     token_check = decode_token(token)
     if token_check is status.HTTP_401_UNAUTHORIZED:
         raise HTTPException(status_code=token_check, detail=f"not authorized token")

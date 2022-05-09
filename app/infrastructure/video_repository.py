@@ -15,6 +15,9 @@ class VideoData(BaseModel):
     end_time: Optional[str]
 
 
+def encode_video_key(user_name):
+    return f'{user_name}'
+
 class VideoRepository(Repository):
     def __init__(self, dynamodb):
         self.table = dynamodb.Table("Video")
@@ -24,10 +27,32 @@ class VideoRepository(Repository):
 
     def get(self, key) -> Optional[VideoData]:
         try:
-            item = VideoData(**(self.table.get_item(Key={"key": key})["Item"]))
+            item=VideoData(**(self.table.get_item(Key={"key": key}))['Item'])
         except:
-            item = None
-        return item
+            item=None
+        finally:
+            return item
+        
 
-    def put(self):
-        ...
+    def put(self, user_name, video_url, current_time, status="uploaded"):
+        try:
+            item = VideoData(
+                key=encode_video_key(user_name),
+                url=video_url,
+                status=status,
+                start_time=current_time,
+                end_time=None    
+            )
+            self.table.put_item(Item=item.dict())
+            return True
+        except:
+            return False
+    
+    def delete(self, key):
+    
+        res = self.table.delete_item(
+            Key={
+                'key': key
+            }
+        )
+        return res
