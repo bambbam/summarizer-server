@@ -1,14 +1,17 @@
 from typing import List, Optional
 
 import boto3
+from fastapi import Depends
 from pydantic import BaseModel
 
 from app.infrastructure.base import Repository
 from app.infrastructure.now import get_now
+from app.interface.router.auth import get_current_user
 
 
 class VideoData(BaseModel):
     key: str
+    user_name: str
     url: str
     status: str
     start_time: str
@@ -16,7 +19,8 @@ class VideoData(BaseModel):
 
 
 def encode_video_key(user_name):
-    return f'{user_name}'
+    return f"{user_name}"
+
 
 class VideoRepository(Repository):
     def __init__(self, dynamodb):
@@ -27,32 +31,34 @@ class VideoRepository(Repository):
 
     def get(self, key) -> Optional[VideoData]:
         try:
-            item=VideoData(**(self.table.get_item(Key={"key": key}))['Item'])
+            item = VideoData(**(self.table.get_item(Key={"key": key}))["Item"])
         except:
-            item=None
+            item = None
         finally:
             return item
-        
 
     def put(self, user_name, video_url, current_time, status="uploaded"):
         try:
             item = VideoData(
                 key=encode_video_key(user_name),
+                user_name=user_name,
                 url=video_url,
                 status=status,
                 start_time=current_time,
-                end_time=None    
+                end_time=None,
             )
             self.table.put_item(Item=item.dict())
             return True
         except:
             return False
-    
-    def delete(self, key):
-    
-        res = self.table.delete_item(
-            Key={
-                'key': key
-            }
-        )
-        return res
+
+    def delete(self, key, username):
+        try:
+            self.table.delete_item(
+                Key={"key": key},
+                ConditionExpression="user_name = :val",
+                ExpressionAttributeValues={":val": username["user"]},
+            )
+            return True
+        except:
+            return False

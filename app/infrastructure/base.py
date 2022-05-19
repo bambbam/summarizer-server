@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 
 import boto3
+from pydantic import BaseModel
 
 
 class Repository(ABC):
@@ -10,6 +11,16 @@ class Repository(ABC):
 
     @abstractmethod
     def get(self, entity_key):
+        ...
+
+
+class COMMAND(BaseModel):
+    ...
+
+
+class EventProducer(ABC):
+    @abstractmethod
+    def put(self, message: COMMAND):
         ...
 
 
