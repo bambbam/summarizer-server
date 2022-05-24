@@ -38,7 +38,7 @@ async def delete_video(
 
 
 class UploadVideo(BaseModel):
-    url: str
+    key: str
 
 
 @router.post("/upload")
@@ -48,10 +48,10 @@ async def upload_video(
     repo = VideoRepository(dynamodb=dynamodb)
     current_time = get_now()
     ret = repo.put(
-        user_name=username["user"], video_url=request.url, current_time=current_time
+        user_name=username["user"], current_time=current_time, key=request.key
     )
-    if ret is not None:
-        return {"uploaded": request.url}
+    if ret:
+        return {"uploaded": request.key}
     raise HTTPException(
         status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"db error"
     )
@@ -76,4 +76,10 @@ async def extract_feature(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"no such video of {request.key} key",
         )
+    ret = repo.put(
+        user_name=ret.user_name,
+        current_time=ret.start_time,
+        key=ret.key,
+        status="in_queue"
+    )
     producer.put(request)

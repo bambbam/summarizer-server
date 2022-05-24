@@ -18,7 +18,6 @@ async def create_user(request: User, dynamodb=Depends(get_db)):
     hashed_pass = bcrypt.hashpw(request.password.encode("utf-8"), bcrypt.gensalt())
     user_object = request.dict()
     user_object["password"] = hashed_pass
-    print(repo)
     user = repo.get(request.username)
 
     if user:

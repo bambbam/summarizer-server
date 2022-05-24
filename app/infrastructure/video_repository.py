@@ -6,20 +6,17 @@ from pydantic import BaseModel
 
 from app.infrastructure.base import Repository
 from app.infrastructure.now import get_now
+from app.infrastructure.uuid import get_uuid
 from app.interface.router.auth import get_current_user
 
 
 class VideoData(BaseModel):
     key: str
     user_name: str
-    url: str
     status: str
     start_time: str
     end_time: Optional[str]
 
-
-def encode_video_key(user_name):
-    return f"{user_name}"
 
 
 class VideoRepository(Repository):
@@ -37,12 +34,11 @@ class VideoRepository(Repository):
         finally:
             return item
 
-    def put(self, user_name, video_url, current_time, status="uploaded"):
+    def put(self, user_name, current_time, key, status="uploaded"):
         try:
             item = VideoData(
-                key=encode_video_key(user_name),
+                key=key,
                 user_name=user_name,
-                url=video_url,
                 status=status,
                 start_time=current_time,
                 end_time=None,
@@ -51,6 +47,7 @@ class VideoRepository(Repository):
             return True
         except:
             return False
+        
 
     def delete(self, key, username):
         try:
