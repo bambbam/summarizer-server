@@ -2,7 +2,7 @@ from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.interface import router
-from app.interface.router import user, video
+from app.interface.router import feature, user, video
 from app.settings import Settings
 
 
@@ -24,3 +24,4 @@ app.add_middleware(
 
 app.include_router(user.router)
 app.include_router(video.router)
+app.include_router(feature.router)
