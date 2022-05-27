@@ -33,7 +33,7 @@ bcrypt = "^3.2.2"
 PyJWT = "^2.3.0"
 python-multipart = "^0.0.5"
 black = "^22.3.0"
-it codependency-injector = "^4.39.1"
+dependency-injector = "^4.39.1"
 redis = "^4.3.1"
 
 
