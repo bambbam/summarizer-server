@@ -13,7 +13,7 @@ def create_user_table(dynamodb=None):
         AttributeDefinitions=[
             {"AttributeName": "username", "AttributeType": "S"},
         ],
-        ProvisionedThroughput={"ReadCapacityUnits": 10, "WriteCapacityUnits": 10},
+        ProvisionedThroughput={"ReadCapacityUnits": 100, "WriteCapacityUnits": 100},
     )
     return table
 
@@ -30,7 +30,7 @@ def create_movie_table(dynamodb=None):
         AttributeDefinitions=[
             {"AttributeName": "key", "AttributeType": "S"},
         ],
-        ProvisionedThroughput={"ReadCapacityUnits": 10, "WriteCapacityUnits": 10},
+        ProvisionedThroughput={"ReadCapacityUnits": 100, "WriteCapacityUnits": 100},
     )
     return table
 
@@ -47,7 +47,7 @@ def create_feature_table(dynamodb=None):
         AttributeDefinitions=[
             {"AttributeName": "key", "AttributeType": "S"},
         ],
-        ProvisionedThroughput={"ReadCapacityUnits": 10, "WriteCapacityUnits": 10},
+        ProvisionedThroughput={"ReadCapacityUnits": 100, "WriteCapacityUnits": 100},
     )
     return table
 
