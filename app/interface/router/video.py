@@ -1,4 +1,4 @@
-from typing import Literal
+from typing import List, Literal
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel
@@ -81,5 +81,31 @@ async def extract_feature(
         current_time=ret.start_time,
         key=ret.key,
         status="in_queue"
+    )
+    producer.put(request)
+
+class ShortenVideo(COMMAND):
+    type: Literal["ShortenVideo"]
+    key: str
+    must_include_feature: List[str]
+
+@router.post("/shorten")
+async def shorten_video(
+    request: ShortenVideo,
+    dynamodb=Depends(get_db),
+    producer=Depends(get_queue),
+):
+    repo = VideoRepository(dynamodb=dynamodb)
+    ret = repo.get(key=request.key)
+    if ret is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"no such video of {request.key} key",
+        )
+    ret = repo.put(
+        user_name=ret.user_name,
+        current_time=ret.start_time,
+        key=ret.key,
+        status="shorten_start"
     )
     producer.put(request)
