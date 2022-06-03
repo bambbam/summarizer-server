@@ -1,8 +1,11 @@
 from abc import ABC, abstractmethod
+import os
 
 import boto3
 from pydantic import BaseModel
+from dotenv import load_dotenv
 
+load_dotenv(verbose=True)
 
 class Repository(ABC):
     @abstractmethod
@@ -25,5 +28,10 @@ class EventProducer(ABC):
 
 
 async def get_db():
-    dynamodb = boto3.resource("dynamodb", endpoint_url="http://localhost:8000")
+    dynamodb = boto3.resource(
+        "dynamodb",
+        aws_access_key_id=os.environ.get('dynamodb_aws_access_key_id'), 
+        aws_secret_access_key=os.environ.get('dynamodb_aws_secret_access_key'), 
+        region_name=os.environ.get('dynamodb_region')
+    )
     return dynamodb
