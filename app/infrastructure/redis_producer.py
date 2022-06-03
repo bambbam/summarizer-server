@@ -16,11 +16,12 @@ class RedisProducer(EventProducer):
 
 
 async def get_queue():
+
     try:
         Redis = redis.Redis(
             host=os.environ.get("redis_host"),
             port=os.environ.get("redis_port")
         )
-        yield RedisProducer(redis=Redis, key=os.environ.get("summarizer"))
+        yield RedisProducer(redis=Redis, key=os.environ.get("redis_key"))
     finally:
         ...
