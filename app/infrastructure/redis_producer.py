@@ -1,4 +1,5 @@
 import json
+import os
 
 import redis
 
@@ -15,12 +16,11 @@ class RedisProducer(EventProducer):
 
 
 async def get_queue():
-
     try:
         Redis = redis.Redis(
-            host="127.0.0.1",
-            port="6379"
+            host=os.environ.get("redis_host"),
+            port=os.environ.get("redis_port")
         )
-        yield RedisProducer(redis=Redis, key="summarizer")
+        yield RedisProducer(redis=Redis, key=os.environ.get("summarizer"))
     finally:
         ...

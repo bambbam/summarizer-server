@@ -10,7 +10,6 @@ from app.settings import Settings
 load_dotenv(verbose=True)
 
 app = FastAPI()
-
 origins = [
     "http://localhost",
     "http://localhost:4000", 
