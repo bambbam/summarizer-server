@@ -15,7 +15,7 @@ class TOKEN(Enum):
 
 def get_tokens(user):
     return (
-        encode_token(user, 300, TOKEN.access),
+        encode_token(user, 7200, TOKEN.access),
         encode_token(user, 3600, TOKEN.refresh),
     )
 
