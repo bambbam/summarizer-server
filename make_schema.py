@@ -1,3 +1,4 @@
+import os
 import boto3
 
 
@@ -53,7 +54,12 @@ def create_feature_table(dynamodb=None):
 
 
 if __name__ == "__main__":
-    dynamodb = boto3.resource("dynamodb", endpoint_url="http://localhost:8000")
+    dynamodb = boto3.resource(
+        "dynamodb",
+        aws_access_key_id=os.environ.get('dynamodb_aws_access_key_id'), 
+        aws_secret_access_key=os.environ.get('dynamodb_aws_secret_access_key'), 
+        region_name=os.environ.get('dynamodb_region')
+    )
     user_table = create_user_table(dynamodb=dynamodb)
     print("userTable status:", user_table.table_status)
     video_table = create_movie_table(dynamodb=dynamodb)

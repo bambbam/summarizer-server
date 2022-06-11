@@ -9,6 +9,7 @@ class Settings(BaseSettings):
     redis_key: str
 
     dynamodb_url: str
-
+    dynamodb_aws_access_key_id: str
+    dynamodb_aws_secret_access_key: str
     class Config:
         env_file = ".env"

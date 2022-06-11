@@ -15,7 +15,6 @@ router = APIRouter(prefix="/feature", tags=["feautures"])
 def get_video_feature(key: str, dynamodb=Depends(get_db)):
     repo = FeatureRepository(dynamodb=dynamodb)
     ret = repo.get(key)
-    print(ret)
     if ret is None:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
