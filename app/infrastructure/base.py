@@ -32,6 +32,7 @@ async def get_db():
         "dynamodb",
         aws_access_key_id=os.environ.get('dynamodb_aws_access_key_id'), 
         aws_secret_access_key=os.environ.get('dynamodb_aws_secret_access_key'), 
-        region_name=os.environ.get('dynamodb_region')
+        region_name=os.environ.get('dynamodb_region'),
+        endpoint_url="http://localhost:8000"
     )
     return dynamodb

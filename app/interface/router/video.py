@@ -5,7 +5,7 @@ from pydantic import BaseModel
 
 from app.infrastructure.base import COMMAND, get_db
 from app.infrastructure.now import get_now
-from app.infrastructure.redis_producer import RedisProducer, get_queue
+from app.infrastructure.redis_producer import RedisProducer, get_queue, get_rabbit_queue
 from app.infrastructure.video_repository import VideoData, VideoRepository
 from app.interface.router.auth import get_current_user
 
@@ -67,7 +67,7 @@ async def extract_feature(
     request: ExtractFeature,
     dynamodb=Depends(get_db),
     username=Depends(get_current_user),
-    producer=Depends(get_queue),
+    producer=Depends(get_rabbit_queue),
 ):
     repo = VideoRepository(dynamodb=dynamodb)
     ret = repo.get(key=request.key)
@@ -93,7 +93,7 @@ class ShortenVideo(COMMAND):
 async def shorten_video(
     request: ShortenVideo,
     dynamodb=Depends(get_db),
-    producer=Depends(get_queue),
+    producer=Depends(get_rabbit_queue),
 ):
     repo = VideoRepository(dynamodb=dynamodb)
     ret = repo.get(key=request.key)
